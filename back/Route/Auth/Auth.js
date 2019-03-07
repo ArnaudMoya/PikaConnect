@@ -29,7 +29,7 @@ router.use(function timeLog(req, res, next) {
 
 
 // define the home page route
-router.post('/signup', function(req, res, next) {
+router.post('/signup', function (req, res, next) {
 
   const formulaireData = req.body;
   console.log(formulaireData)
@@ -39,15 +39,13 @@ router.post('/signup', function(req, res, next) {
   //   password: '', 
   //   name:'',
   //   lastname:''
-   
+
   // }
   connection.query('INSERT INTO users SET ?', formulaireData, (err, results) => {
-    if (err) {
-      console.log(err);
-      res.status(500).send("Erreur lors de la sauvegarde d'un user");
-    } else {
-      res.sendStatus(200);
-    }
+    if (err)
+      res.status(500).json({ flash: err.message });
+    else
+      res.status(200).json({ flash: "User has been signed up !" });
 
   })
 });
@@ -58,7 +56,7 @@ router.post('/signup', function(req, res, next) {
 
 
 // define the about route
-router.get('/about', function(req, res) {
+router.get('/about', function (req, res) {
   res.send('About birds');
 });
 
@@ -107,7 +105,7 @@ module.exports = router;
 // app.put('/api/employees/', (req, res) => {
 
 //   // récupération des données envoyées
-  
+
 //   const formData = req.body;
 
 //   // connection à la base de données, et insertion de l'employé
