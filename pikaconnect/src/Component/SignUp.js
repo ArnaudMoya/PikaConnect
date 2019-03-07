@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import { MDBContainer, MDBRow, MDBCol, MDBBtn, MDBInput } from 'mdbreact';
 
 
 
@@ -8,10 +8,10 @@ class SignUp extends Component {
         super(props)
         this.state = {
             mail: "test@email.com",
-            mdp: "t",
-            mdpverif: "t",
-            name: "t",
-            nickname: "t"
+            mdp: "",
+            mdpverif: "",
+            name: "",
+            nickname: ""
         }
     }
 
@@ -42,7 +42,7 @@ class SignUp extends Component {
             nickname: event.target.value
         })
     }
-    affichejson =()=> {
+    affichejson = () => {
         console.log(this.state)
     }
 
@@ -55,21 +55,82 @@ class SignUp extends Component {
 
 
 
-        return (
-            <div>
-                <h1>{JSON.stringify(this.state, 1, 1)}</h1>
-                <form>
-                    <input type="email" value={this.state.mail} name="email" onChange={this.updateEmailField} />
-                    <input type="mdp" value={this.state.mdp} name="Mdp" onChange={this.updateMdp} />
-                    <input type="mdpverif" value={this.state.mdpverif} name="Mdpverif" onChange={this.updateMdpverif} />
-                    <input type="name" value={this.state.name} name="Name" onChange={this.updateName} />
-                    <input type="nickname" value={this.state.nickname} name="Nickname" onChange={this.updateNickname} />
-                    <input type="button" value="Envoyer le formulaire" onClick={this.affichejson} />
-                </form>
+        return (    
+            
+                <div>
+                    <h1>{JSON.stringify(this.state, 1, 1)}</h1>
+                    <MDBContainer className="float-right">
+                        <MDBRow>
+                            <MDBCol md="6">
+                                <form>
+                                    <p className="h5 text-center mb-4">Sign up</p>
+                                    <div className="grey-text">
+                                        <MDBInput
+                                            label="Your name"
+                                            icon="user"
+                                            value={this.state.name}
+                                            onChange={this.updateName}
+                                            group
+                                            type="text"
+                                            validate
+                                            error="wrong"
+                                            success="right"
+                                        />
+                                        <MDBInput
+                                            label="Your Nickname"
+                                            icon="user"
+                                            value={this.state.nickname}
+                                            onChange={this.updateNickname}
+                                            group
+                                            type="text"
+                                            validate
+                                            error="wrong"
+                                            success="right"
+                                            className="test"
 
+                                        />
+                                        <MDBInput
+                                            label="Your email"
+                                            icon="envelope"
+                                            value={this.state.mail}
+                                            onChange={this.updateEmailField}
+                                            group
+                                            type="email"
+                                            validate
+                                            error="wrong"
+                                            success="right"
+                                        />
 
+                                        <MDBInput
+                                            label="Your password"
+                                            icon="lock"
+                                            value={this.state.mdp}
+                                            onChange={this.updateMdp}
+                                            group
+                                            type="password"
+                                            validate
+                                        />
+                                        <MDBInput
+                                            label="Confirm your password"
+                                            icon="lock"
+                                            value={this.state.mdpverif}
+                                            onChange={this.updateMdpverif}
+                                            group
+                                            type="password"
+                                            validate
 
-            </div>
+                                        />
+                                    </div>
+                                    <div className="text-center">
+                                        <MDBBtn color="primary">Register</MDBBtn>
+                                    </div>
+                                </form>
+                            </MDBCol>
+                        </MDBRow>
+                    </MDBContainer>
+                </div>
+
+            
 
 
 
