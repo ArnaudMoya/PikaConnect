@@ -1,3 +1,24 @@
 .float-right{
   margin-top: 50px;
 }
+.Signup{
+  margin-left: 25%;
+  
+}
+body{
+
+  background-image: url(../IMG/pikachu.jpg);
+
+}
+h1{
+  text-align: center;
+  font-size: 4em;
+  color:#FFFF00;
+  font-weight: bold;
+
+}
+
+.testt{
+  text-align: center;
+  padding-right: 40px;
+}

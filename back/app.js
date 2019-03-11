@@ -17,7 +17,10 @@ app.get("/", (req, res) => {
     res.send("youhou");
 })
 
-app.use('/auth',authRouter); //où authRouter est issu de l'importation
+
+
+
+app.use('/auth', authRouter); //où authRouter est issu de l'importation
 
 /// dans le cas d'une route non trouvée, je retourne le code 404 'Not Found'
 app.use(function (req, res, next) {
@@ -25,6 +28,24 @@ app.use(function (req, res, next) {
     err.status = 404;
     next(err);
 });
+
+// passport.use(new LocalStrategy(
+//     {
+//         usernameField: 'email',
+//         passwordField: 'password',
+//         session: false
+//     },
+//     function (email, password, cb) {
+//         // si une erreur est obtenue
+//         return cb(err)
+//         // si les login/password ne sont pas bon
+//         return cb(null, false, { message: 'Incorrect email ou password.' })
+//         // si l'utilisateur est ok on retourne l'objet user
+//         return cb(null, user)
+//     }
+// ));
+
+
 
 //je lance le serveur node
 let server = app.listen(process.env.PORT || 5000, function () {

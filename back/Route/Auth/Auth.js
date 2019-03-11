@@ -1,7 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var app = express();
-
+var MySql = require('mysql')
+// var passeport = require('passport');
 const connection = require('../../helpers/db');
 const bodyParser = require('body-parser');
 // Support JSON-encoded bodies
@@ -11,9 +12,51 @@ router.use(bodyParser.urlencoded({
   extended: true
 }));
 
+// // je crypte myPassword qui devient un 'hash'
+// let hash = bcrypt.hashSync('myPassword', 10);
+// // je compare un mot de passe avec le 'hash', j'obtiens true ou false s'ils sont identique ou non
+// let isSame = bcrypt.compareSync('somePassword', hash)
+
+router.post('/signin', function (req, res) {
+  console.log(req.body)
+  const dataForm = req.body
+  const mail = req.body.mail
+  const password = req.body.password
+  console.log(mail)
+  console.log(password)
+
+  connection.query("SELECT * FROM users WHERE email=(" + MySql.escape(dataForm.mail) + ")", function (err, results, fields) {
 
 
 
+    if (err) {
+
+      res.send("Error")
+
+
+
+    } else {
+      if (results.length === 0) {
+        return res.json({ message: "aucun resultats" })
+      }
+      if (results[0].password === password) {
+        console.log(results[0].password)
+        res.status(200).json(results)
+
+      }
+    }
+
+  });
+  // connection.query('SELECT * FROM users WHERE email=', formulaireData, (err, results) => {
+  //   if (err)
+  //     res.status(500).json({ flash: err.message });
+  //   else
+  //     res.status(200).json({ flash: "User has been signed up !" });
+
+  // })
+  // });
+
+});
 
 
 // middleware that is specific to this router
@@ -21,6 +64,8 @@ router.use(function timeLog(req, res, next) {
   console.log('Time: ', Date.now());
   next();
 });
+
+
 
 
 
