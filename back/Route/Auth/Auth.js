@@ -2,6 +2,10 @@ var express = require('express');
 var router = express.Router();
 var app = express();
 var MySql = require('mysql')
+const bcrypt = require('bcrypt');
+var jwt = require('jsonwebtoken');  
+var expressJwt = require('express-jwt'); 
+
 // var passeport = require('passport');
 const connection = require('../../helpers/db');
 const bodyParser = require('body-parser');
@@ -12,18 +16,17 @@ router.use(bodyParser.urlencoded({
   extended: true
 }));
 
-// // je crypte myPassword qui devient un 'hash'
-// let hash = bcrypt.hashSync('myPassword', 10);
-// // je compare un mot de passe avec le 'hash', j'obtiens true ou false s'ils sont identique ou non
-// let isSame = bcrypt.compareSync('somePassword', hash)
+
 
 router.post('/signin', function (req, res) {
   console.log(req.body)
   const dataForm = req.body
   const mail = req.body.mail
   const password = req.body.password
-  console.log(mail)
-  console.log(password)
+
+
+
+  console.log(dataForm)
 
   connection.query("SELECT * FROM users WHERE email=(" + MySql.escape(dataForm.mail) + ")", function (err, results, fields) {
 
@@ -36,13 +39,22 @@ router.post('/signin', function (req, res) {
 
 
     } else {
+
       if (results.length === 0) {
         return res.json({ message: "aucun resultats" })
       }
-      if (results[0].password === password) {
-        console.log(results[0].password)
+      if (bcrypt.compareSync(password, results[0].password)) {
+        var token = jwt.sign({username: 'toto'}, jwtSecret);
+        var otherPro = 'blibli';
+        res.send({
+          token: token,
+          otherPro: otherPro
+        });
+      console.log(results[0].password)
         res.status(200).json(results)
-
+        // Passwords match
+      } else {
+        console.log(results[0])
       }
     }
 
@@ -75,6 +87,13 @@ router.use(function timeLog(req, res, next) {
 
 // define the home page route
 router.post('/signup', function (req, res, next) {
+
+  let hash = bcrypt.hashSync(req.body.password, 10);
+  let hassh = bcrypt.hashSync(req.body.name, 10);
+  console.log(req.body.password)
+  console.log(hassh)
+  req.body.password = hash
+
 
   const formulaireData = req.body;
   console.log(formulaireData)
@@ -261,15 +280,15 @@ module.exports = router;
 // })
 
 
-// app.get('/', function (req, res) {
-//   res.send('Bienvenue en enfer')
-// })
+app.get('/', function (req, res) {
+  res.send('Bienvenue en enfer')
+})
 
 
 
 
-// app.listen(port, () =>
-//   console.log(`Example app listening on port ${port}!`
+app.listen(port, () =>
+  console.log(`Example app listening on port ${port}!`
 
 
-//   ))
+  ))
