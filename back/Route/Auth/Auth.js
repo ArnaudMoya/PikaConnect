@@ -5,6 +5,7 @@ var MySql = require('mysql')
 const bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');  
 var expressJwt = require('express-jwt'); 
+var port = 3000;
 
 // var passeport = require('passport');
 const connection = require('../../helpers/db');
@@ -13,8 +14,7 @@ const bodyParser = require('body-parser');
 router.use(bodyParser.json());
 // Support URL-encoded bodies
 router.use(bodyParser.urlencoded({
-  extended: true
-}));
+extended: true}));
 
 
 
@@ -44,14 +44,9 @@ router.post('/signin', function (req, res) {
         return res.json({ message: "aucun resultats" })
       }
       if (bcrypt.compareSync(password, results[0].password)) {
-        var token = jwt.sign({username: 'toto'}, jwtSecret);
-        var otherPro = 'blibli';
-        res.send({
-          token: token,
-          otherPro: otherPro
-        });
-      console.log(results[0].password)
+        var token = jwt.sign({username: 'toto'}, 'testi');
         res.status(200).json(results)
+        
         // Passwords match
       } else {
         console.log(results[0])
@@ -120,9 +115,24 @@ router.post('/signup', function (req, res, next) {
 
 
 // define the about route
-router.get('/about', function (req, res) {
-  res.send('About birds');
+app.get('/about', function (req, res) {
+  res.json({
+    text:"titi",
+    token:token
+  })
 });
+
+
+
+router.get('/api/login', function (req, res) {
+  res.json({
+    text:"zizi"
+  })
+})
+
+
+
+
 
 module.exports = router;
 
@@ -280,15 +290,11 @@ module.exports = router;
 // })
 
 
-app.get('/', function (req, res) {
-  res.send('Bienvenue en enfer')
-})
 
 
 
+// app.listen(port, () =>
+//   console.log(`Example app listening on port!`
 
-app.listen(port, () =>
-  console.log(`Example app listening on port ${port}!`
 
-
-  ))
+//   ))

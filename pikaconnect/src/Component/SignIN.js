@@ -49,12 +49,13 @@ class SignIN extends Component {
       {
         method: 'POST',
         headers: new Headers({
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         }),
         body: JSON.stringify(this.state),
       })
       .then(res => res.json())
       .then(res => {
+        console.log(res)
         if (res.length > 0) {
           this.setState({ import: res, connected: true })
           console.log(res)

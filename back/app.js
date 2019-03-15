@@ -1,11 +1,10 @@
-const http = require('http');
-const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const app = express();
 var authRouter = require('./Route/Auth/Auth.js')
-
+var jwt = require('jsonwebtoken');  
+var expressJwt = require('express-jwt'); 
 // je configure l'application
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -13,9 +12,8 @@ app.use(bodyParser.json());
 app.use(express.static(__dirname + '/public'));
 
 // j'implémente la partie API
-app.get("/", (req, res) => {
-    res.send("youhou");
-})
+
+
 
 
 
