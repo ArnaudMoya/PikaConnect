@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link, Route, NavLink } from 'react-router-dom';
 
 import {
   MDBContainer,
@@ -7,7 +6,6 @@ import {
   MDBCol,
   MDBCard,
   MDBCardBody,
-  MDBModalFooter,
   MDBIcon,
   MDBCardHeader,
   MDBBtn,
@@ -18,8 +16,21 @@ import {
 class SignIN extends Component {
   constructor(props) {
     super(props)
-    this.state = { mail: "", password: "", import: "", connected: false }
+    this.state = { mail: "", password: "", import: "", connected: false, token:""}
   }
+  componentWillMount(){
+
+    
+    const toki = localStorage.getItem('token')
+
+    this.state.token = toki
+    console.log(this.state.token)
+    if(this.state.token !== ""){
+      this.props.history.push("/Profil")
+    }
+
+  }
+
   updateEmailField = (event) => {
 
     this.setState({
@@ -42,7 +53,6 @@ class SignIN extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault()
-    const { mail, mdp } = this.state;
 
 
     fetch("auth/signin",
@@ -55,12 +65,13 @@ class SignIN extends Component {
       })
       .then(res => res.json())
       .then(res => {
-        console.log(res)
-        if (res.length > 0) {
+        
+        if (res.results.length > 0) {
           this.setState({ import: res, connected: true })
           console.log(res)
-          localStorage.setItem('res',res)
-          console.log(this.state.import)
+          localStorage.setItem('token',res.token)
+          localStorage.setItem('donne',JSON.stringify(res.results))
+          this.props.history.push("/Profil")
         }
       }
 
@@ -70,27 +81,13 @@ class SignIN extends Component {
   
     }
 
-
-
-
   render() {
 
     let test = "";
 
     if(this.state.connected === true){
-      test = <div className="text-center mt-4">
-      <NavLink exact to="/Profil">
-        <MDBBtn
-          color="cyan lighten-2"
-          className="mb-3"
-          type="submit"
-          disabled={this.state.connected}
+      // test = this.props.history.push("/Profil")
 
-        >Connect
-  </MDBBtn>
-  </NavLink>
-
-      </div>
     }
 
     return (
@@ -153,9 +150,6 @@ class SignIN extends Component {
         </MDBContainer>
 
       </div>
-
-
-
     )
   }
 }

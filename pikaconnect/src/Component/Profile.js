@@ -1,23 +1,25 @@
 import React, { Component } from 'react';
-import { MDBBtn, MDBCard, MDBCardBody, MDBCardImage, MDBCardTitle, MDBCardText,MDBInput, MDBCol } from 'mdbreact';
+import {MDBCard, MDBCardBody, MDBCardImage,MDBInput, MDBCol } from 'mdbreact';
 
 
 class Profile extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            profile: {
-                email: "homer.simpson@wildcodeschool.fr",
-                name: "Homer",
-                lastname: "Simpson",
-                mdp:"kiki",
-                res:localStorage.getItem('res')
-            }
+            profile: localStorage.getItem('donne'),
+            token: localStorage.getItem('token')
+            
         }
-        console.log(this.state.res)
-        console.log(localStorage.getItem('res'))
-        
+        console.log(this.state.profile)
+     let donne = "";
+     const tokenn = "";
+    }
 
+
+    componentWillMount(){
+      this.donne = JSON.parse(this.state.profile)
+      this.tokenn = this.state.token
+      console.log(this.donne)
     }
 
     render() {
@@ -32,7 +34,7 @@ class Profile extends Component {
                     <MDBInput
                                         label="Your name"
                                         icon="user"
-                                        value={this.state.profile.name}
+                                        value={this.donne[0].name}
                                         
                                         group
                                         type="text"
@@ -43,7 +45,7 @@ class Profile extends Component {
                                     <MDBInput
                                         label="Your Nickname"
                                         icon="user"
-                                        value={this.state.profile.lastname}
+                                        value={this.donne[0].lastname}
                                         
                                         group
                                         type="text"
@@ -56,7 +58,7 @@ class Profile extends Component {
                                     <MDBInput
                                         label="Your email"
                                         icon="envelope"
-                                        value={this.state.profile.email}
+                                        value={this.donne[0].email}
                                         
                                         group
                                         type="email"
@@ -65,15 +67,7 @@ class Profile extends Component {
                                         success="right"
                                     />
 
-                                    <MDBInput
-                                        label="Your password"
-                                        icon="lock"
-                                        value={this.state.profile.mdp}
-                                      
-                                        group
-                                        type="text"
-                                        validate
-                                    />
+                                    
                         
                     </MDBCardBody>
                 </MDBCard>
