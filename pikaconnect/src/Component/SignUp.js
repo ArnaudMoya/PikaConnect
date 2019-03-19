@@ -4,10 +4,7 @@ import '../CSS/App.css'
 import {
     MDBContainer,
     MDBRow, MDBCol, MDBBtn,
-    MDBInputMDBContainer,
     MDBModal,
-    MDBModalBody,
-    MDBModalHeader,
     MDBModalFooter,
     MDBCard,
     MDBCardBody,

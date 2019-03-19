@@ -3,9 +3,11 @@ var router = express.Router();
 var app = express();
 var MySql = require('mysql')
 const bcrypt = require('bcrypt');
-var jwt = require('jsonwebtoken');  
-var expressJwt = require('express-jwt'); 
-var port = 3000;
+var jwt = require('jsonwebtoken');
+var mySecret = 'blablabla';
+var expressJwt = require('express-jwt');
+
+
 
 // var passeport = require('passport');
 const connection = require('../../helpers/db');
@@ -14,9 +16,16 @@ const bodyParser = require('body-parser');
 router.use(bodyParser.json());
 // Support URL-encoded bodies
 router.use(bodyParser.urlencoded({
-extended: true}));
+  extended: true
+}));
 
 
+router.post('/Profil', function (req, res) {
+  console.log("/Profil",req.body)
+
+
+
+})
 
 router.post('/signin', function (req, res) {
   console.log(req.body)
@@ -28,41 +37,25 @@ router.post('/signin', function (req, res) {
 
   console.log(dataForm)
 
-  connection.query("SELECT * FROM users WHERE email=(" + MySql.escape(dataForm.mail) + ")", function (err, results, fields) {
-
-
-
+  connection.query("SELECT * FROM users WHERE email=(" + MySql.escape(dataForm.mail) + ")", function (err, results) {
+    console.log("Resultats Query",results)
     if (err) {
-
       res.send("Error")
-
-
-
     } else {
-
       if (results.length === 0) {
         return res.json({ message: "aucun resultats" })
       }
       if (bcrypt.compareSync(password, results[0].password)) {
-        var token = jwt.sign({username: 'toto'}, 'testi');
-        res.status(200).json(results)
-        
+        var token = jwt.sign(results[0].name, mySecret);//{expiresIn: 20}
+        console.log("salut c'est oim", results, token)
+        res.status(200).json({ results, token })
+
         // Passwords match
       } else {
-        console.log(results[0])
+        console.log("testr", results[0])
       }
     }
-
   });
-  // connection.query('SELECT * FROM users WHERE email=', formulaireData, (err, results) => {
-  //   if (err)
-  //     res.status(500).json({ flash: err.message });
-  //   else
-  //     res.status(200).json({ flash: "User has been signed up !" });
-
-  // })
-  // });
-
 });
 
 
@@ -74,19 +67,10 @@ router.use(function timeLog(req, res, next) {
 
 
 
-
-
-
-
-
-
 // define the home page route
-router.post('/signup', function (req, res, next) {
-
+router.post('/signup', function (req, res) {
+  console.log("tototiti", req.body)
   let hash = bcrypt.hashSync(req.body.password, 10);
-  let hassh = bcrypt.hashSync(req.body.name, 10);
-  console.log(req.body.password)
-  console.log(hassh)
   req.body.password = hash
 
 
@@ -101,6 +85,7 @@ router.post('/signup', function (req, res, next) {
 
   // }
   connection.query('INSERT INTO users SET ?', formulaireData, (err, results) => {
+    console.log(err)
     if (err)
       res.status(500).json({ flash: err.message });
     else
@@ -110,15 +95,10 @@ router.post('/signup', function (req, res, next) {
 });
 
 
-
-
-
-
 // define the about route
 app.get('/about', function (req, res) {
   res.json({
-    text:"titi",
-    token:token
+    text: "titi",
   })
 });
 
@@ -126,7 +106,7 @@ app.get('/about', function (req, res) {
 
 router.get('/api/login', function (req, res) {
   res.json({
-    text:"zizi"
+    text: "zizi"
   })
 })
 
@@ -137,164 +117,3 @@ router.get('/api/login', function (req, res) {
 module.exports = router;
 
 
-
-// const express = require('express')
-// const app = express()
-// const port = 3000
-// const connection = require('./config');
-// const bodyParser = require('body-parser');
-// // Support JSON-encoded bodies
-// app.use(bodyParser.json());
-// // Support URL-encoded bodies
-// app.use(bodyParser.urlencoded({
-//   extended: true
-// }));
-
-
-
-
-
-// app.put('/api/employees/:id', (req, res) => {
-
-//   // récupération des données envoyées
-//   const idEmployee = req.params.id;
-//   const formData = req.body;
-
-//   // connection à la base de données, et insertion de l'employé
-//   connection.query('UPDATE employee SET ? WHERE id = ?', [formData, idEmployee], err => {
-
-//     if (err) {
-//       // Si une erreur est survenue, alors on informe l'utilisateur de l'erreur
-//       console.log(err);
-//       res.status(500).send("Erreur lors de la modification d'un employé");
-//     } else {
-
-//       // Si tout s'est bien passé, on envoie un statut "ok".
-//       res.sendStatus(200);
-//     }
-//   });
-// });
-
-
-// app.put('/api/employees/', (req, res) => {
-
-//   // récupération des données envoyées
-
-//   const formData = req.body;
-
-//   // connection à la base de données, et insertion de l'employé
-//   connection.query('UPDATE employee SET ? WHERE id = ?', [formData, idEmployee], err => {
-
-//     if (err) {
-//       // Si une erreur est survenue, alors on informe l'utilisateur de l'erreur
-//       console.log(err);
-//       res.status(500).send("Erreur lors de la modification d'un employé");
-//     } else {
-
-//       // Si tout s'est bien passé, on envoie un statut "ok".
-//       res.sendStatus(200);
-//     }
-//   });
-// });
-
-
-
-
-
-
-
-
-
-// app.post('/api/movie', (req, res) => {
-//   // TODO récupérer les données (étape 2)
-//   const formulaireData = req.body;
-//   console.log(formulaireData)
-//   // format du formulaireData
-//   // {
-//   //   firstname: '',
-//   //   lastname: '', 
-//   //   email: '',
-//   // }
-//   connection.query('INSERT INTO movie SET ?', formulaireData, (err, results) => {
-//     if (err) {
-//       console.log(err);
-//       res.status(500).send("Erreur lors de la sauvegarde d'un movie");
-//     } else {
-//       res.sendStatus(200);
-//     }
-
-//   })
-//   // TODO enregistrer les données (étape 3)
-
-// });
-
-
-
-// app.get('/api/movies', (req, res) => {
-
-//   // connection à la base de données, et sélection des employés
-//   connection.query('SELECT * from movie', (err, results) => {
-
-//     if (err) {
-//       console.log(err.sqlMessage)
-//       // Si une erreur est survenue, alors on informe l'utilisateur de l'erreur
-//       res.status(500).send('Erreur lors de la récupération des films');
-//     } else {
-
-//       // Si tout s'est bien passé, on envoie le résultat de la requête SQL en tant que JSON.
-//       res.json(results);
-//     }
-//   });
-// });
-
-// app.get('/api/movies/name', (req, res) => {
-
-//   // connection à la base de données, et sélection des employés
-//   connection.query('SELECT name from movie', (err, results) => {
-
-//     if (err) {
-//       console.log(err.sqlMessage)
-//       // Si une erreur est survenue, alors on informe l'utilisateur de l'erreur
-//       res.status(500).send('Erreur lors de la récupération des names');
-//     } else {
-
-//       // Si tout s'est bien passé, on envoie le résultat de la requête SQL en tant que JSON.
-//       res.json(results);
-//     }
-//   });
-// });
-
-
-
-
-
-
-
-
-// app.get(`/api/movies/:name`, function (req, res) {
-//   const name = req.params.name
-//   res.json({ result: `${name}` })
-
-
-
-// })
-
-// app.get('/api/employee', function (req, res) {
-//   const titi = req.query.name
-//   console.log()
-//   if (titi) {
-//     res.status(404).send(`impossible de récupérer l'employée  ${titi}`);
-//   } else {
-//     res.status(304)
-//   }
-// })
-
-
-
-
-
-// app.listen(port, () =>
-//   console.log(`Example app listening on port!`
-
-
-//   ))
